@@ -1,0 +1,178 @@
+<hr>
+<p>title: Markdown基本语法30分钟入门渲染效果<br>date: 2020-08-25 16:53:27<br>tags: markdown</p>
+<hr>
+<h1 id="Markdown-基本语法半小时入门"><a href="#Markdown-基本语法半小时入门" class="headerlink" title="Markdown 基本语法半小时入门"></a>Markdown 基本语法半小时入门</h1><h1 id="这是一级标题"><a href="#这是一级标题" class="headerlink" title="这是一级标题"></a>这是一级标题</h1><h2 id="这是二级标题"><a href="#这是二级标题" class="headerlink" title="这是二级标题"></a>这是二级标题</h2><h3 id="三级标题同理-还有更多级的不再演示了"><a href="#三级标题同理-还有更多级的不再演示了" class="headerlink" title="三级标题同理,还有更多级的不再演示了"></a>三级标题同理,还有更多级的不再演示了</h3><p>正文直接输入即可</p>
+<p>空行要在源码中单独空一行，否则没有实际效果<br>比如这样<br>只会多一个空格</p>
+<p>这样就是空行了</p>
+<p>但是这种方法最多只有一个空行,如果要插入更多空行,可以使用<code>&lt;/br&gt;</code>或者<code>&amp;nbsp;</code></p>
+<p>实例:</p>
+<p>疯狂回车只能插入一个空行</p>
+<p>你看,我上面打了这么多空行还是只有一个<br></br></br></br></br> &nbsp;</p>
+<p>这样就有很多空行了<br></br></p>
+<p>插入代码:</p>
+<pre><code>use this to import code blocks</code></pre>
+<p>也可以插入一个特定的代码词,比如<code>print</code></p>
+<p>单行的代码只用一个<code>`</code>也可: </p>
+<p><code>print(&quot;wocaisile\n&quot;)</code></p>
+<p>插入代码块方式如下:</p>
+<pre><code class="python"># python language
+print(&quot; use this to import highlighted code blocks in particular language\n&quot;)</code></pre>
+<pre><code class="c++">//c++ language
+#include &lt;cstdio&gt;
+using namespace std;
+
+int main()
+{
+  printf(&quot;Hello, world!\n&quot;);
+  return 0;
+}</code></pre>
+<p>有序列表直接使用<code>数字+标点+空格</code>即可</p>
+<ol>
+<li>vvdalaotql</li>
+<li>hyydalaotql</li>
+<li>wsdcj<ol>
+<li>wohaocaia</li>
+<li>wzmzmc</li>
+<li>使用缩进来创造子列表</li>
+</ol>
+</li>
+</ol>
+<p>无序列表用<code>+ - *</code>中任何一个都可,后面也要加一个空格</p>
+<p>今日任务</p>
+<ul>
+<li>膜vv大佬</li>
+</ul>
+<ul>
+<li>膜hyy大佬</li>
+</ul>
+<ul>
+<li>……<ul>
+<li>同样可以用缩进的方式创造子列表<ul>
+<li>还可以进一步创造子列表 </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>还有个像我们的学习清任务一样的方式,语法如下:</p>
+<pre><code class="markdown">已经完成的任务: - + 空格 + [x]
+未完成的任务:- + 空格 + [ ]</code></pre>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> 膜vv大佬</li>
+<li><input disabled="" type="checkbox"> 学会markdown<br></br></br></li>
+</ul>
+<p><strong>这样就可以实现加粗了</strong></p>
+<p><em>这样可以实现倾斜</em></p>
+<p><strong><em>既要加粗又要倾斜是这样</em></strong></p>
+<p><del>加删除线是这样</del></p>
+<p><strong><em><del>终极合体版</del></em></strong></p>
+<p>三个或者以上的<code>---</code>或<code>***</code>可以插入分割线,显示效果是一样的</p>
+<hr>
+<hr>
+<hr>
+<blockquote>
+<p>这是引用内容</p>
+<blockquote>
+<p>这是引用内容中的引用内容</p>
+<blockquote>
+<p>三级套娃同理</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>引用内容实例：</p>
+<blockquote>
+<p>hyy曾说：“我很喜欢vvdl在《网安失格》里说的一句话，说的啥我忘了。”</p>
+</blockquote>
+</br>
+
+<p><img src="https://i.loli.net/2020/08/25/SdkFtaBmV2bDMZA.png" alt="你可以多去%hyy.png" title="其实说的是这个"></p>
+<p>如果要插入图片,是这样的</p>
+<pre><code class="markdown">![图片alt](图片地址 &quot;图片title&quot;)
+
+图片alt就是显示在图片下面的文字，相当于对图片内容的解释。
+图片title是图片的标题，当鼠标移到图片上时显示的内容。title可加可不加</code></pre>
+<p>下面是演示</p>
+<p><img src="https://i.loli.net/2020/08/24/gTOepoVcQMYLBj5.png" alt="爬就爬,我最会爬了.jpg" title="现在看到的就是title"></p>
+<p>关于上传图片的更多问题可以点<a href="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1411828034,3661053816&fm=26&gp=0.jpg" title="还没写好,在写了在写了">这里</a>查看</p>
+<hr>
+<p>超链接也很简单</p>
+<pre><code class="markdown">[超链接名](超链接地址 &quot;超链接title&quot;)
+title可加可不加</code></pre>
+<p><a href="www.bilibili.com" title="这里可以看到title">BiliBili</a></p>
+<p>当然超链接名也可以用上面加粗或者删除的语法</p>
+<p><a href="www.zhihu.com"><strong><em><del>知乎</del></em></strong></a></p>
+<p>表格的语法是</p>
+<pre><code class="markdown">|表头|表头|表头|
+|---|:--:|---:|
+|内容|内容|内容|
+|内容|内容|内容|
+
+第二行分割表头和内容。
+- 有一个就行，为了对齐，多加了几个
+  :- 文字默认居左
+ :-: 表示文字居中
+  -: 表示文字居右</code></pre>
+<p>实例:</p>
+<table>
+<thead>
+<tr>
+<th>姓名</th>
+<th align="center">技能</th>
+<th align="right">实力</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>vv</td>
+<td align="center">啥都会</td>
+<td align="right">dalao</td>
+</tr>
+<tr>
+<td>hyy</td>
+<td align="center">啥都会</td>
+<td align="right">dalao</td>
+</tr>
+<tr>
+<td>lbh</td>
+<td align="center">啥都不会</td>
+<td align="right">five</td>
+</tr>
+</tbody></table>
+</br>
+
+<table>
+<thead>
+<tr>
+<th>默认是左对齐</th>
+<th align="left">我也是左对齐</th>
+<th align="center">我是中对齐</th>
+<th align="right">我是右对齐</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>左左左左</td>
+<td align="left">俺也一样</td>
+<td align="center">啦啦啦</td>
+<td align="right">往右对齐看起来</td>
+</tr>
+<tr>
+<td>左左左左</td>
+<td align="left">俺也一样</td>
+<td align="center">中对齐</td>
+<td align="right">好不爽啊</td>
+</tr>
+<tr>
+<td>左左左左</td>
+<td align="left">俺也一样</td>
+<td align="center">就是我</td>
+<td align="right">俺也觉得</td>
+</tr>
+<tr>
+<td></br></td>
+<td align="left"></td>
+<td align="center"></td>
+<td align="right"></td>
+</tr>
+</tbody></table>
+<p>一般会多打几个<code>-</code>来保证格式一致,但是实际上一个就可以了</p>
+<hr>
+<p>以上就是markdown的基本语法了, 还有些进阶的内容可以点击<a href="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1411828034,3661053816&fm=26&gp=0.jpg" title="还没写好,在写了在写了">这里</a>查看</p>
