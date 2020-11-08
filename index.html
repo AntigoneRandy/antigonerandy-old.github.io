@@ -189,7 +189,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -228,6 +228,102 @@
 
         <div class="content index posts-expand">
           
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://antigonerandy.github.io/2020/11/08/hackergame-wp-dogebank/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2020/08/25/9pPnHO2KfiSINsR.jpg">
+      <meta itemprop="name" content="AntigoneRandy">
+      <meta itemprop="description" content="什么都不会的菜鸡">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AntigoneRandy">
+    </span>
+
+    
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/11/08/hackergame-wp-dogebank/" class="post-title-link" itemprop="url">狗狗银行-题解</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-11-08 18:24:13 / 修改时间：18:25:43" itemprop="dateCreated datePublished" datetime="2020-11-08T18:24:13+08:00">2020-11-08</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="狗狗银行"><a href="#狗狗银行" class="headerlink" title="狗狗银行"></a>狗狗银行</h1><p>题目来源：USTC-Hackergame 2020</p>
+<blockquote>
+<p>你能在狗狗银行成功薅到羊毛吗？</p>
+</blockquote>
+<h2 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h2><p>进入页面后稍做观察，发现不能通过常规的借钱-还钱-利率差的方式盈利，因为每日吃饭要花去10元，而信用卡利率大于储蓄卡利率，不可能通过常规方式获胜。</p>
+<p>注意到利息计算没有小数，而是四舍五入到整数位，考虑从此处入手薅羊毛。即储蓄卡中有167元时，167*0.3%=0.501&gt;0.5，四舍五入可以获得1元的利息，1000元可以办卡约5张，获利5元，大于原本的3元即实际利率变成了1/167=0.59%，高于信用卡的利息5%。因此当储蓄卡足够多时候，可以有可观的盈利。此方法是可行的。</p>
+<p>稍加计算可以发现：</p>
+<p>信用卡：一张a元，支出a*0.5%</p>
+<p>储蓄卡：x张，每张167元，盈利x元</p>
+<p>每日吃饭：10元</p>
+<p>列一个二元一次方程组可解：</p>
+<p>x * 167 = a + 1000</p>
+<p>x - 10 - a * 0.5% &gt; 1000</p>
+<p>在满足此要求的情况下，恰饭一天即可盈利1000元+</p>
+<p>容易解得一个x为6100，此时a为1017700。此时的办卡数超过了题目1000张办卡的限制（当然笔者在增加此限制之前已经用此思想把 flag 拿到手了）。要达到至多1000张办卡的条件限制，方法也很简单：由于每天净赚 0.09% 利息，即使办卡少，减去利息后也依旧有客观的收入（假设办805张卡，借钱800 * 167 = 133600元，资产共134600元，每日收入805元，指出10 + 133600 * 0.5% = 678元，也依旧有127元/天的收入），每天逐渐就能积累到 1000 狗狗币。</p>
+<p>但是这种方法有一个缺陷就是，每日恰饭后会产生不能盈利的利息，即167元和168元都是1元利息，而信用卡中的利息却能有效增加，一天后（133600 + 668）* 0.5% =671.34元，如果胜利条件要求的金额比较高，会导致盈利慢慢变少，每张卡200元时恰好不能盈利，之后就开始亏钱。因此正确的做法是每隔一段时间就将所有储蓄卡中的多出的钱全部收集到一起，或者直接还给信用卡。当然，经过测试，由于办卡数还是足够多，还未达到亏损的界限就已经胜利，用不着这么麻烦，只需要多恰饭几次即可。</p>
+<p>自动化方法：</p>
+<ol>
+<li>burpsuite抓包</li>
+</ol>
+<p>点击“办新卡”，打开<em>SwitchyOmega</em>的burpsuite代理，点击办新的储蓄卡，打开burp中的Intercept发现抓包结果</p>
+<p><img src="https://i.loli.net/2020/11/08/zNoRLvCscUeTpOg.png" alt="c.png"></p>
+<p>发现向<code>host/api/create</code>接口发送了<code>&#123;&quot;type&quot;:&quot;debit&quot;&#125;</code>的JSON数据包。</p>
+<p>再用相同的方法抓包转账时的数据包，例如储蓄卡1向储蓄卡2转账500元时， burpsuite 抓包结果如下：</p>
+<p><img src="https://i.loli.net/2020/11/08/U6vMENHVfRc3gmY.png" alt="c.png"></p>
+<p>联想英语知识容易看出， src 是 source ，即付款卡， dst 是 destination ，即收款卡， amount 就是数额。</p>
+<p>后面的事情就很简单了，先人工操作办一张信用卡，借133600元到1号储蓄卡，再办卡800张，平均每张卡分配167元。办卡和转账的过程可以使用 burpsuite 自带的爆破功能（Intruder）完成。</p>
+<h2 id="burpsuite爆破方法讲解"><a href="#burpsuite爆破方法讲解" class="headerlink" title="burpsuite爆破方法讲解"></a>burpsuite爆破方法讲解</h2><p>先找到刚才发办卡请求那个包，右键，点击Send to Intruder，之后点击Intruder。</p>
+<p>Attack type讲解：</p>
+<ul>
+<li>Sniper ：Sniper就是狙击手，他的攻击方式是：只有一个字典，先用该字典遍历第一个变量位置，再用该字典便利第二个变量位置，以此类推。没有被遍历的位置则保持原始的数据</li>
+<li>Battering ram ：“重锤”，它的攻击方式是：同样只有一个字典，不过每次攻击都用这个字典的一项来代替所有的变量位置，第二次再用第二项代替所有的位置，以此类推</li>
+<li>Pitchfork ：“草叉”，它一个变量对应一个字典，第一次攻击时，变量1对应字典1的第一项，变量2对应字典2的第一项，第二次攻击时，变量1对应字典1的第二项，变量2对应字典2的第二项，以此类推</li>
+<li>Cluster bomb：“集束炸弹”，它也是一个变量对应一个字典，不过不同的是，变量1对应字典1的第一项后，变量2会依次取字典2的第1，2，3…项，直到字典2遍历结束后，变量1又会再取字典1的第二项，变量2再依次取字典2的第1，2，3…项，依此类推。</li>
+</ul>
+<p>对于第一个，办卡，发现不用改变量，我们只需要重复800次即可。于是把debit设成变量，再用python生成800个debit，把它当为字典即可。</p>
+<p>对于第二个操作，转账，只需要把dst改一下即可。我们随便选一个爆破方式，把dst的“2”设成变量，然后用python输出3-804的数字，把它作为payload（当然要把金额改成167元），attack结束后打开页面就会发现每张卡都有167元了，于是手动点恰饭10多次，即可达到目标获得flag。</p>
+<p>如果要每隔一段时间就将所有储蓄卡中的多出的钱全部还给信用卡，也很简单。恰几次饭过后把金额设成多出来的钱，src设成变量，dst设成信用卡爆破一次即可。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
