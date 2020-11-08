@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  
+  <link rel="stylesheet" href="/lib/animate-css/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"antigonerandy.github.io","root":"/","scheme":"Muse","version":"8.0.0-rc.5","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false};
+  </script>
+
+  <meta name="description" content="自复读的复读机-题解背景资料题目来源：USTC-Hackergame2020  自复读的复读机能够复读其他程序输出的程序只是普通的复读机。顶尖的复读机还应该能复读出自己的源代码。什么是国际复读机啊（战术后仰）你现在需要编写两个只有一行 Python 代码的顶尖复读机：  其中一个要输出代码本身的逆序（即所有字符从后向前依次输出） 另一个是输出代码本身的 sha256 哈希值，十六进制小写满足两个条">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自复读的复读机-题解">
+<meta property="og:url" content="https://antigonerandy.github.io/2020/11/08/hackergame-wp-quine/index.html">
+<meta property="og:site_name" content="AntigoneRandy">
+<meta property="og:description" content="自复读的复读机-题解背景资料题目来源：USTC-Hackergame2020  自复读的复读机能够复读其他程序输出的程序只是普通的复读机。顶尖的复读机还应该能复读出自己的源代码。什么是国际复读机啊（战术后仰）你现在需要编写两个只有一行 Python 代码的顶尖复读机：  其中一个要输出代码本身的逆序（即所有字符从后向前依次输出） 另一个是输出代码本身的 sha256 哈希值，十六进制小写满足两个条">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/11/08/w8rPCc9kIZvshUY.png">
+<meta property="article:published_time" content="2020-11-08T03:42:08.000Z">
+<meta property="article:modified_time" content="2020-11-08T03:45:47.188Z">
+<meta property="article:author" content="AntigoneRandy">
+<meta property="article:tag" content="CTF">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/11/08/w8rPCc9kIZvshUY.png">
+
+<link rel="canonical" href="https://antigonerandy.github.io/2020/11/08/hackergame-wp-quine/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>自复读的复读机-题解 | AntigoneRandy</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <main class="main">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+        <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">AntigoneRandy</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">什么都不会</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E5%A4%8D%E8%AF%BB%E7%9A%84%E5%A4%8D%E8%AF%BB%E6%9C%BA-%E9%A2%98%E8%A7%A3"><span class="nav-number">1.</span> <span class="nav-text">自复读的复读机-题解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E8%B5%84%E6%96%99"><span class="nav-number">1.1.</span> <span class="nav-text">背景资料</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%A4%8D%E8%AF%BB%E7%9A%84%E5%A4%8D%E8%AF%BB%E6%9C%BA"><span class="nav-number">1.2.</span> <span class="nav-text">自复读的复读机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%8D%E5%90%91%E5%A4%8D%E8%AF%BB"><span class="nav-number">1.3.</span> <span class="nav-text">反向复读</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%93%88%E5%B8%8C%E5%A4%8D%E8%AF%BB"><span class="nav-number">1.4.</span> <span class="nav-text">哈希复读</span></a></li></ol></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AntigoneRandy"
+      src="https://i.loli.net/2020/08/25/9pPnHO2KfiSINsR.jpg">
+  <p class="site-author-name" itemprop="name">AntigoneRandy</p>
+  <div class="site-description" itemprop="description">什么都不会的菜鸡</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </header>
+
+      
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div id="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+      <div class="main-inner">
+        
+
+        <div class="content post posts-expand">
+          
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://antigonerandy.github.io/2020/11/08/hackergame-wp-quine/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2020/08/25/9pPnHO2KfiSINsR.jpg">
+      <meta itemprop="name" content="AntigoneRandy">
+      <meta itemprop="description" content="什么都不会的菜鸡">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AntigoneRandy">
+    </span>
+
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          自复读的复读机-题解
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-11-08 11:42:08 / 修改时间：11:45:47" itemprop="dateCreated datePublished" datetime="2020-11-08T11:42:08+08:00">2020-11-08</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="自复读的复读机-题解"><a href="#自复读的复读机-题解" class="headerlink" title="自复读的复读机-题解"></a>自复读的复读机-题解</h1><h2 id="背景资料"><a href="#背景资料" class="headerlink" title="背景资料"></a>背景资料</h2><p>题目来源：USTC-Hackergame2020</p>
+<blockquote>
+<h2 id="自复读的复读机"><a href="#自复读的复读机" class="headerlink" title="自复读的复读机"></a>自复读的复读机</h2><p>能够复读其他程序输出的程序只是普通的复读机。<br>顶尖的复读机还应该能复读出自己的源代码。<br>什么是国际复读机啊（战术后仰）<br>你现在需要编写两个只有一行 Python 代码的顶尖复读机：</p>
+<ul>
+<li>其中一个要输出代码本身的逆序（即所有字符从后向前依次输出）</li>
+<li>另一个是输出代码本身的 sha256 哈希值，十六进制小写<br>满足两个条件分别对应了两个 flag。<br>快来开始你的复读吧~</li>
+</ul>
+</blockquote>
+<p>输出自己代码的程序是很多程序设计书上面当作趣味题介绍的内容。实际上，这类程序有一个专门的名字：<strong>Quine</strong></p>
+<p>​                                                                                                                   最简单的 Quine 实例👇：</p>
+<img src="https://i.loli.net/2020/11/08/w8rPCc9kIZvshUY.png" alt="Snipaste_2020-11-08_10-12-14.png" style="zoom: 150%;" />
+
+<p>在<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Quine_(computing)">维基百科</a>上，我们不难找到相关的信息：</p>
+<blockquote>
+<p>In general, the method used to create a quine in any programming language is to have, within the program, two pieces: (a) <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Source_code">code</a> used to do the actual printing and (b) <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Data">data</a> that represents the textual form of the code. The code functions by using the data to print the code (which makes sense since the data represents the textual form of the code), but it also uses the data, processed in a simple way, to print the textual representation of the data itself.</p>
+</blockquote>
+<blockquote>
+<p>Here are three small examples in Python3:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a=<span class="string">&#x27;a=%s%s%s;print(a%%(chr(39),a,chr(39)))&#x27;</span>;print(a%(chr(<span class="number">39</span>),a,chr(<span class="number">39</span>)))</span><br><span class="line">b=<span class="string">&#x27;b=&#123;&#125;&#123;&#125;&#123;&#125;;print(b.format(chr(39),b,chr(39)))&#x27;</span>;print(b.format(chr(<span class="number">39</span>),b,chr(<span class="number">39</span>)))</span><br><span class="line">c=<span class="string">&#x27;c=%r;print(c%%c)&#x27;</span>;print(c%c)</span><br><span class="line"><span class="comment">#note that %r will quote automatically</span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>看起来第三个例子是最简单的，它将变量<code>c</code>定义为<code>c=%r;print(c%%c)</code> ,然后输出<code>c%c</code>,那么最后的输出即为<code>c=&#39;c=%r;print(c%%c)&#39;;print(c%c)</code>,和代码本身相同。</p>
+<p>知识点补充： Python 中字符串格式化输出</p>
+<p>Python 支持格式化字符串输出，写法和c语言类似（又称<code>printf</code> 风格的字符串格式化）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">print</span> (<span class="string">&quot;我叫%s，今年%d岁!&quot;</span> % (<span class="string">&#x27;小明&#x27;</span>, <span class="number">10</span>))</span><br><span class="line"><span class="comment"># 我叫小明，今年10岁!</span></span><br></pre></td></tr></table></figure>
+
+<p>其中常用的转义符有：<code>%s</code>输出字符串，<code>%r</code>输出带引号的字符串(也就是解释器能看懂，或者说能用<code>eval()</code>函数处理的字符串)，<code>%d</code>输出整数，<code>%%</code>输出单个<code>%</code>。</p>
+<p>（实际上，<code>%s</code>的含义是使用 <a target="_blank" rel="noopener" href="https://docs.python.org/zh-cn/3/library/stdtypes.html#str"><code>str()</code></a> 转换任何 Python 对象，<code>%r</code>则为使用 <a target="_blank" rel="noopener" href="https://docs.python.org/zh-cn/3/library/functions.html#repr"><code>repr()</code></a> 转换任何 Python 对象）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>str = <span class="string">&quot;Randy&quot;</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">&quot;Hello, %s&quot;</span> % str) </span><br><span class="line">Hello, Randy</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">&quot;Hello, %r&quot;</span> % str) </span><br><span class="line">Hello, <span class="string">&#x27;Randy&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>容易发现，<code>c</code>其实可以代码任意改动后的结果。</p>
+<p>因此，完成这两个题目只需要对第三个例子做很小的改动即可。</p>
+<p>我们将这个字串作为原始字串：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c=<span class="string">&#x27;&#x27;</span>;print(c%c)</span><br></pre></td></tr></table></figure>
+
+<p>要生成任意代码的 Quine ，我们只需要把代码写好，然后把代码复制到<code>c</code>里面，再把<code>c</code>中的<code>&#39;&#39;</code>换成<code>%r</code>，再把<code>c%c</code>改成<code>c%%c</code>就好了。</p>
+<p>当然，由于<code>c%c</code>这个字符串就是代码本身，你也可以拿它去做任何事情。比如接下来的反向和哈希。</p>
+<h2 id="反向复读"><a href="#反向复读" class="headerlink" title="反向复读"></a>反向复读</h2><p>正常情况下反向字符串，笔者个人喜欢用<code>print(str[::-1])</code>的形式。它表示从最后一个字符到第一个字符挨个输出<code>str</code>。</p>
+<p>因此构造的源代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c=<span class="string">&#x27;&#x27;</span>;print((c%c)[::<span class="number">-1</span>])</span><br></pre></td></tr></table></figure>
+
+<p>再将<code>c</code>替换成源代码即可。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">c=<span class="string">&#x27;c=%r;print((c%%c)[::-1])&#x27;</span>;print((c%c)[::<span class="number">-1</span>])</span><br><span class="line"><span class="comment"># )]1-::[)c%c((tnirp;&#x27;)]1-::[)c%%c((tnirp;r%=c&#x27;=c</span></span><br><span class="line"><span class="comment"># 反向后结果：c=&#x27;c=%r;print((c%%c)[::-1])&#x27;;print((c%c)[::-1])</span></span><br></pre></td></tr></table></figure>
+
+<p>当然这样直接交上去是过不了的，因为<code>print</code>函数会默认输出一个换行，而题目并没有自动过滤多余的换行。解决方法也很简单，再<code>print</code>函数的末尾加上一个<code>end=&quot;&quot;</code>即可。注意到使用单引号会造成解释器无法识别<code>c</code>边界的错误，使用双引号即可。</p>
+<p>最后的<code>payload</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c=<span class="string">&#x27;c=%r;print((c%%c)[::-1],end=&quot;&quot;)&#x27;</span>;print((c%c)[::<span class="number">-1</span>],end=<span class="string">&quot;&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Your one line python code to exec(): c=&#x27;c=%r;print((c%%c)[::-1],end=&quot;&quot;)&#x27;;print((c%c)[::-1],end=&quot;&quot;)</span><br><span class="line"></span><br><span class="line">Your code is:</span><br><span class="line">&#x27;c=\&#x27;c=%r;print((c%%c)[::-1],end=&quot;&quot;)\&#x27;;print((c%c)[::-1],end=&quot;&quot;)&#x27;</span><br><span class="line"></span><br><span class="line">Output of your code is:</span><br><span class="line">&#x27;)&quot;&quot;=dne,]1-::[)c%c((tnirp;\&#x27;)&quot;&quot;=dne,]1-::[)c%%c((tnirp;r%=c\&#x27;=c&#x27;</span><br><span class="line"></span><br><span class="line">Checking reversed(code) == output</span><br><span class="line">flag&#123;Yes!_Y0U_h4v3_a_r3v3rs3d_Qu1ne_0ce801c949&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Checking sha256(code) == output</span><br><span class="line">Failed!</span><br><span class="line"></span><br><span class="line">Connection closed</span><br></pre></td></tr></table></figure>
+
+<h2 id="哈希复读"><a href="#哈希复读" class="headerlink" title="哈希复读"></a>哈希复读</h2><p>和反向复读同理，先写出正常情况下的hash字符串代码，再替换即可。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line">hash=hashlib.sha256()</span><br><span class="line">c=<span class="string">&#x27;&#x27;</span></span><br><span class="line">hash.update((c%c).encode(<span class="string">&quot;utf-8&quot;</span>))</span><br><span class="line">print(hash.hexdigest())</span><br></pre></td></tr></table></figure>
+
+<p>把以上代码压成一团：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib;hash=hashlib.sha256();c=<span class="string">&#x27;&#x27;</span>;hash.update((c%c).encode(<span class="string">&quot;utf-8&quot;</span>));print(hash.hexdigest(),end=<span class="string">&quot;&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>用源代码替换<code>c</code>，便得到了<code>payload</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib;hash=hashlib.sha256();c=<span class="string">&#x27;import hashlib;hash=hashlib.sha256();c=%r;hash.update((c%%c).encode(&quot;utf-8&quot;));print(hash.hexdigest(),end=&quot;&quot;)&#x27;</span>;hash.update((c%c).encode(<span class="string">&quot;utf-8&quot;</span>));print(hash.hexdigest(),end=<span class="string">&quot;&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Your one line python code to exec(): import hashlib;hash=hashlib.sha256();c=&#x27;import hashlib;hash=hashlib.sha256();c=%r;hash.update((c%%c).encode(&quot;utf-8&quot;));print(hash.hexdigest(),end=&quot;&quot;)&#x27;;hash.update((c%c).encode(&quot;utf-8&quot;));print(hash.hexdigest(),end=&quot;&quot;)</span><br><span class="line"></span><br><span class="line">Your code is:</span><br><span class="line">&#x27;import hashlib;hash=hashlib.sha256();c=\&#x27;import hashlib;hash=hashlib.sha256();c=%r;hash.update((c%%c).encode(&quot;utf-8&quot;));print(hash.hexdigest(),end=&quot;&quot;)\&#x27;;hash.update((c%c).encode(&quot;utf-8&quot;));print(hash.hexdigest(),end=&quot;&quot;)&#x27;</span><br><span class="line"></span><br><span class="line">Output of your code is:</span><br><span class="line">&#x27;ba521b0ff69f036dc1c52252a8935fc53eb14b08887426a27431b9d2e95370be&#x27;</span><br><span class="line"></span><br><span class="line">Checking reversed(code) == output</span><br><span class="line">Failed!</span><br><span class="line"></span><br><span class="line">Checking sha256(code) == output</span><br><span class="line">flag&#123;W0W_Y0Ur_c0de_0utputs_1ts_0wn_sha256_ba5d874da8&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Connection closed</span><br></pre></td></tr></table></figure>
+
+
+
+<p>参考链接：<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Quine_(computing)">Quine (computing)-Wikipedia</a><br><a target="_blank" rel="noopener" href="https://docs.python.org/3/library/stdtypes.html#old-string-formatting"><code>printf</code>-style String Formatting</a><br><a target="_blank" rel="noopener" href="https://github.com/USTC-Hackergame/hackergame2020-writeups/blob/master/official/%E8%87%AA%E5%A4%8D%E8%AF%BB%E7%9A%84%E5%A4%8D%E8%AF%BB%E6%9C%BA/README.md">官方题解</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/CTF/" rel="tag"># CTF</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/08/26/suggestions-for-beginners/" rel="prev" title="Suggestions_for_beginners">
+      <i class="fa fa-chevron-left"></i> Suggestions_for_beginners
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+        </div>
+        
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AntigoneRandy</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
